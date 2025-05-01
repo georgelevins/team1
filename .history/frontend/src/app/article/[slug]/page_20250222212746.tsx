@@ -15,12 +15,7 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!apiUrl) {
-    throw new Error('NEXT_PUBLIC_API_URL is not defined');
-  }
-
-  const res = await fetch(`${apiUrl}/api/article/${params.slug}`, { cache: "no-store" })
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article/${params.slug}`, { cache: "no-store" })
   if (!res.ok) {
     // fallback title if article is not found
     const title = params.slug.replace(/_/g, " ")
@@ -39,20 +34,15 @@ export default async function ArticlePage({ params }: Props) {
       return <div>Invalid article URL</div>
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    if (!apiUrl) {
-      throw new Error('NEXT_PUBLIC_API_URL is not defined');
-    }
-
     // Fetch both article and sequence data in parallel
     const [articleRes, sequenceRes] = await Promise.all([
-      fetch(`${apiUrl}/api/article/${params.slug}`, { 
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article/${params.slug}`, { 
         cache: "no-store",
         headers: {
           'Content-Type': 'application/json',
         },
       }),
-      fetch(`${apiUrl}/api/article-sequence/${params.slug}`, { 
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article-sequence/${params.slug}`, { 
         cache: "no-store",
         headers: {
           'Content-Type': 'application/json',
